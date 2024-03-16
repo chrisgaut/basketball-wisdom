@@ -81,14 +81,14 @@ get_per_100_poss <- function(year) {
   # Select metrics you want to analyze
   df_short <- df %>%
     filter(as.numeric(MP) >= 300) %>% # Minimum 300 minutes played
-    select(Player, PTS, ORB, FTA, TOV, X2PA, X3PA) %>%
-    mutate(Points = as.numeric(PTS),
-           Offensive_Rebounds = as.numeric(ORB),
-           Free_Throw_Attempts = as.numeric(FTA),
-           Turnovers = as.numeric(TOV),
-           Two_Point_Attempts = as.numeric(X2PA),
-           Three_Point_Attempts = as.numeric(X3PA)) %>%
-    select(Player, Points, Offensive_Rebounds, Free_Throw_Attempts, Turnovers, Two_Point_Attempts, Three_Point_Attempts)
+    select(Player, PTS, AST, FTA, TOV, X2PA, X3PA) %>%
+    mutate(`PTS/100` = as.numeric(PTS),
+           `AST/100` = as.numeric(AST),
+           `FTA/100` = as.numeric(FTA),
+           `TO/100` = as.numeric(TOV),
+           `2PA/100` = as.numeric(X2PA),
+           `3PA/100` = as.numeric(X3PA)) %>%
+    select(Player, `PTS/100`, `AST/100`, `FTA/100`, `TO/100`, `2PA/100`, `3PA/100`)
   
   # Create percentiles
   df_percentiles <- df_short %>%
