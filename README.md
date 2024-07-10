@@ -1,2 +1,2 @@
 # basketball-wisdom
-[WIP] Building a basketball analytics web application
+[WIP] Building a basketball visualization web application.
