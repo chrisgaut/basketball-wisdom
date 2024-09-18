@@ -1,2 +1,2 @@
 # basketball-wisdom
-[WIP] Building a basketball visualization web application.
+[WIP] Building a basketball data tool serving game predictions, data visualization and betting tools.
