@@ -12,7 +12,8 @@ source('information.R')
 shinyUI(
   navbarPage(title="Basketball Wisdom",
              theme = shinytheme("cosmo"),
-             tabPanel("Visualization Lab", "Visualization Page"),
+             tabPanel("Visualization Lab", 
+                      plotOutput("teamVizLabPlot")),
              tabPanel("League", 
                       plotOutput("teamRatingsPlot", width = "550px", height = "550px"),
                       gt_output("teamRatingsTable")),

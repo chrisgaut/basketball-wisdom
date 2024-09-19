@@ -14,6 +14,21 @@ source('information.R')
 server <- function(input, output) {
   
   # Outputs
+  output$teamVizLabPlot <- renderPlot({
+    data <- get_team_advanced_stats_bref(current_year) %>% filter(Team!="League Average")
+    
+    plot <- ggplot(data = data, aes(x=Pace, y=ORtg, label = Tm)) +
+      geom_nba_logos(aes(team_abbr = Tm), width = 0.05) +
+      labs(title="Visualization Builder Rough Draft") + xlab("Pace") + ylab("Offensive Rating") +
+      labs(caption = "Data from Basketball Reference | https://chris-gaut.shinyapps.io/basketball-wisdom/") +
+      theme(panel.grid = element_line(color = "grey", size = 0.75, linetype = 1),
+            panel.background = element_rect(fill = "white"),
+            panel.border = element_rect(colour = "grey", fill=NA, size=1),
+            text=element_text(family="source-sans-pro"))
+    
+    return(plot)
+  })
+  
   output$teamRatingsPlot <- renderPlot({
     plot <- team_ratings_graph(current_year)
     return(plot)
