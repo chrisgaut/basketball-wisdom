@@ -13,6 +13,8 @@ shinyUI(
   navbarPage(title="Basketball Wisdom",
              theme = shinytheme("cosmo"),
              tabPanel("Visualization Lab", 
+                      selectInput("xAxisTeam", "X-Axis", choices = c("MOV", "SOS")),
+                      selectInput("yAxisTeam", "Y-Axis", choices = c("MOV", "SOS")),
                       plotOutput("teamVizLabPlot")),
              tabPanel("League", 
                       plotOutput("teamRatingsPlot", width = "550px", height = "550px"),
