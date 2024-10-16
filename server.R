@@ -35,6 +35,14 @@ server <- function(input, output) {
     return(plot)
   })
   
+  output$team_advanced_stats_table <- render_gt({
+    data <- get_team_advanced_stats_bref(current_year) %>% filter(Team!="League Average")
+    
+    table <- data %>% gt()
+    
+    return(table)
+  })
+  
   output$teamRatingsPlot <- renderPlot({
     plot <- team_ratings_graph(current_year)
     return(plot)
