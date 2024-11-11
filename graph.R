@@ -6,7 +6,7 @@ source("data.R")
 
 # League Net Ratings Graph
 team_ratings_graph <- function(year) {
-  data <- get_team_ratings(year)
+  data <- get_team_ratings_bref(year)
   
   median_ortg <- median(data$ORtg)
   median_drtg <- median(data$DRtg)
