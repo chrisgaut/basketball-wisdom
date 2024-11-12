@@ -38,10 +38,15 @@ server <- function(input, output) {
   output$team_advanced_stats_table <- render_gt({
     data <- get_team_advanced_stats_bref(current_year) %>% 
       filter(Team!="League Average") %>%
-      select(-Arena, -Attendance, -`Attendance/G`, -Tm)
+      select(-Age, -Arena, -Attendance, -`Attendance/G`, -Tm)
     
     table <- data |> 
       gt() |> 
+      data_color(columns = vars(W, PW, MOV, SOS, SRS, ORtg, NRtg, Pace, FTr, `3PAr`, `TS%`, 
+                                `eFG%`, `ORB%`, `FT/FGA`, `Opp. TOV%`, `DRB%`),
+                 colors = scales::col_numeric(palette = c("red", "white", "green"), domain = NULL)) |>
+      data_color(columns = vars(L, PL, DRtg, `TOV%`, `Opp. eFG%`, `Opp. FT/FGA`),
+                 colors = scales::col_numeric(palette = c("green", "white", "red"), domain = NULL)) |>
       opt_interactive(use_pagination = FALSE,
                       use_sorting = TRUE,
                       use_compact_mode = TRUE)
