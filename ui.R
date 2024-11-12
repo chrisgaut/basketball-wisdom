@@ -22,7 +22,7 @@ shinyUI(
                       selectInput("player", label = "Player", choices = player_list),
                       plotOutput("playerPercentilePlot", width = "550px", height = "550px")
                       ),
-             tabPanel("On Paper Matchup", 
+             tabPanel("Teams", 
                       gt_output("team_advanced_stats_table")),
              tabPanel("Model", "Model page"),
              tabPanel("Betting Tools", "Page with different betting calculation tools"),

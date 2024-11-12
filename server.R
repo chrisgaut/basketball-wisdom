@@ -36,9 +36,15 @@ server <- function(input, output) {
   })
   
   output$team_advanced_stats_table <- render_gt({
-    data <- get_team_advanced_stats_bref(current_year) %>% filter(Team!="League Average")
+    data <- get_team_advanced_stats_bref(current_year) %>% 
+      filter(Team!="League Average") %>%
+      select(-Arena, -Attendance, -`Attendance/G`, -Tm)
     
-    table <- data %>% gt()
+    table <- data |> 
+      gt() |> 
+      opt_interactive(use_pagination = FALSE,
+                      use_sorting = TRUE,
+                      use_compact_mode = TRUE)
     
     return(table)
   })
