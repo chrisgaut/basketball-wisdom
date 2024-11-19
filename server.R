@@ -38,15 +38,50 @@ server <- function(input, output) {
   output$team_advanced_stats_table <- render_gt({
     data <- get_team_advanced_stats_bref(current_year) %>% 
       filter(Team!="League Average") %>%
-      select(-Age, -Arena, -Attendance, -`Attendance/G`, -Tm)
+      mutate(`W-L` = str_c(W, "-", L),
+             `PW-PL` = str_c(PW, "-", PL),
+             .before = 2) %>%
+      select(-Age, -W, -L, -PW, -PL, -Arena, -Attendance, -`Attendance/G`, -Team)
     
     table <- data |> 
+      select(Tm, `W-L`, `PW-PL`, MOV, SOS, NRtg, ORtg, DRtg, `TS%`, `eFG%`, `3PAr`, 
+             `ORB%`, `DRB%`, `FT/FGA`, `TOV%`, `Opp. eFG%`, `Opp. FT/FGA`, `Opp. TOV%`, Pace, FTr) |>
       gt() |> 
-      data_color(columns = vars(W, PW, MOV, SOS, SRS, ORtg, NRtg, Pace, FTr, `3PAr`, `TS%`, 
+      data_color(columns = vars(MOV, SOS, ORtg, NRtg, Pace, FTr, `3PAr`, `TS%`, 
                                 `eFG%`, `ORB%`, `FT/FGA`, `Opp. TOV%`, `DRB%`),
                  colors = scales::col_numeric(palette = c("red", "white", "green"), domain = NULL)) |>
-      data_color(columns = vars(L, PL, DRtg, `TOV%`, `Opp. eFG%`, `Opp. FT/FGA`),
+      data_color(columns = vars(DRtg, `TOV%`, `Opp. eFG%`, `Opp. FT/FGA`),
                  colors = scales::col_numeric(palette = c("green", "white", "red"), domain = NULL)) |>
+      tab_spanner(
+        label = "Record",
+        columns = c(`W-L`, `PW-PL`, MOV, SOS)
+      ) |>
+      tab_spanner(
+        label = "Ratings",
+        columns = c(NRtg, ORtg, DRtg)
+      ) |>
+      tab_spanner(
+        label = "Team Advanced",
+        columns = c(`TS%`, `eFG%`, `3PAr`, `ORB%`, `DRB%`, `FT/FGA`, `TOV%`)
+      ) |>
+      tab_spanner(
+        label = "Opponent Advanced",
+        columns = c(`Opp. eFG%`, `Opp. FT/FGA`, `Opp. TOV%`)
+      ) |>
+      tab_spanner(
+        label = "Aggressiveness",
+        columns = c(Pace, FTr)
+      ) |>
+      tab_style(style = cell_borders(sides = c("right"),  
+                                     weight = px(2)), 
+                locations = cells_body(columns = c(Tm, SOS, DRtg, `TOV%`, `Opp. TOV%`))) |>
+      tab_style(style = cell_borders(sides = c("top"),  
+                                     weight = px(3)), 
+                locations = cells_body(rows = c(11, 21))) |>
+      cols_width(
+        Tm ~ px(70),
+        everything() ~ px(80)
+      ) |>
       opt_interactive(use_pagination = FALSE,
                       use_sorting = TRUE,
                       use_compact_mode = TRUE)
