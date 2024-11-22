@@ -44,13 +44,14 @@ server <- function(input, output) {
       select(-Age, -W, -L, -PW, -PL, -Arena, -Attendance, -`Attendance/G`, -Team)
     
     table <- data |> 
+      mutate(`Opp. ORB%` = 100-`DRB%`) |>
       select(Tm, `W-L`, `PW-PL`, MOV, SOS, NRtg, ORtg, DRtg, `TS%`, `eFG%`, `3PAr`, 
-             `ORB%`, `DRB%`, `FT/FGA`, `TOV%`, `Opp. eFG%`, `Opp. FT/FGA`, `Opp. TOV%`, Pace, FTr) |>
+             `ORB%`, `Opp. ORB%`, `FT/FGA`, `TOV%`, `Opp. eFG%`, `Opp. FT/FGA`, `Opp. TOV%`, Pace, FTr) |>
       gt() |> 
       data_color(columns = vars(MOV, SOS, ORtg, NRtg, Pace, FTr, `3PAr`, `TS%`, 
-                                `eFG%`, `ORB%`, `FT/FGA`, `Opp. TOV%`, `DRB%`),
+                                `eFG%`, `ORB%`, `FT/FGA`, `Opp. TOV%`),
                  colors = scales::col_numeric(palette = c("red", "white", "green"), domain = NULL)) |>
-      data_color(columns = vars(DRtg, `TOV%`, `Opp. eFG%`, `Opp. FT/FGA`),
+      data_color(columns = vars(DRtg, `TOV%`, `Opp. eFG%`, `Opp. FT/FGA`, `Opp. ORB%`),
                  colors = scales::col_numeric(palette = c("green", "white", "red"), domain = NULL)) |>
       tab_spanner(
         label = "Record",
@@ -58,23 +59,23 @@ server <- function(input, output) {
       ) |>
       tab_spanner(
         label = "Ratings",
-        columns = c(NRtg, ORtg, DRtg)
+        columns = c(NRtg, ORtg, DRtg, Pace)
       ) |>
       tab_spanner(
-        label = "Team Advanced",
-        columns = c(`TS%`, `eFG%`, `3PAr`, `ORB%`, `DRB%`, `FT/FGA`, `TOV%`)
+        label = "Shooting",
+        columns = c(`TS%`, `3PAr`)
       ) |>
       tab_spanner(
-        label = "Opponent Advanced",
-        columns = c(`Opp. eFG%`, `Opp. FT/FGA`, `Opp. TOV%`)
+        label = "Team Four Factors",
+        columns = c(`eFG%`, `ORB%`, `FT/FGA`, `TOV%`)
       ) |>
       tab_spanner(
-        label = "Aggressiveness",
-        columns = c(Pace, FTr)
+        label = "Opponent Four Factors",
+        columns = c(`Opp. eFG%`, `Opp. ORB%`, `Opp. FT/FGA`, `Opp. TOV%`)
       ) |>
       tab_style(style = cell_borders(sides = c("right"),  
                                      weight = px(2)), 
-                locations = cells_body(columns = c(Tm, SOS, DRtg, `TOV%`, `Opp. TOV%`))) |>
+                locations = cells_body(columns = c(Tm, SOS, Pace, `3PAr`, `TOV%`, `Opp. TOV%`))) |>
       tab_style(style = cell_borders(sides = c("top"),  
                                      weight = px(3)), 
                 locations = cells_body(rows = c(11, 21))) |>
