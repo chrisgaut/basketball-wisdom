@@ -32,7 +32,7 @@ shinyUI(
                                  ),
                         tabPanel("Sliders",
                                  selectInput("player", label = "Player", choices = player_list),
-                                 plotOutput("playerPercentilePlot", width = "550px", height = "550px")
+                                 plotOutput("playerPer36PercentilePlot", width = "550px", height = "550px")
                                  ),
                         tabPanel("Viz 2",
                                  "Another viz"

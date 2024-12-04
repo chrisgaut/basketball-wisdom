@@ -606,3 +606,25 @@ get_per_100_poss <- function(year) {
   return(df_percentiles)
 }
 
+# Scrape player per 36 minutes stats from Basketball Reference
+get_player_per_36_stats_bref <- function(year) {
+  url = paste0("https://www.basketball-reference.com/leagues/NBA_", year, "_per_minute.html")
+  
+  tbl = url%>%
+    read_html() %>%
+    html_nodes("table") %>%
+    html_table()
+  
+  df <- data.frame(tbl) %>%
+    filter(Rk != 'Rk') %>% # Remove dividing rows
+    distinct(Player, .keep_all = TRUE) |> # Remove duplicate player names
+    select(-Rk, -Awards) # Remove Rank and Award column
+  
+  # Adjust column names
+  colnames(df) <- c('Player', 'Age', 'Team', 'Pos', 'G', 'GS', 'MP', 'FG', 'FGA', 'FG%', '3P', '3PA',
+                    '3P%', '2P', '2PA', '2P%', 'eFG%', 'FT', 'FTA', 'FT%', 'ORB', 'DRB', 'TRB', 'AST',
+                    'STL', 'BLK', 'TOV', 'PF', 'PTS')
+  
+  return(df)
+}
+

@@ -100,8 +100,8 @@ server <- function(input, output) {
     return(table)
   })
   
-  output$playerPercentilePlot <- renderPlot({
-    plot <- player_percentile_graph(input$player, current_year)
+  output$playerPer36PercentilePlot <- renderPlot({
+    plot <- player_per_36_percentile_graph(input$player, current_year)
     return(plot)
   })
 }

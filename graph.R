@@ -53,3 +53,51 @@ player_percentile_graph <- function(player, year) {
   
   return(player_percentile_plot)
 }
+
+# Player Per 36 Minutes Percentile Graph
+player_per_36_percentile_graph <- function(player, year) {
+  data <- get_player_per_36_stats_bref(year)
+  
+  df_short <- data %>%
+    filter(as.numeric(MP) >= 300) %>% # Minimum 150 minutes played
+    select(Player, `FG%`, `2P%`, `3P%`, `eFG%`, PTS, TRB, AST, STL, BLK) %>%
+    mutate(`FG%` = as.numeric(`FG%`),
+           `2P%` = as.numeric(`2P%`),
+           `3P%` = as.numeric(`3P%`),
+           `eFG%` = as.numeric(`eFG%`),
+           `PTS/36` = as.numeric(PTS),
+           `REB/36` = as.numeric(TRB),
+           `AST/36` = as.numeric(AST),
+           `STL/36` = as.numeric(STL),
+           `BLK/36` = as.numeric(BLK)) %>%
+    select(Player, `FG%`, `2P%`, `3P%`, `eFG%`, `PTS/36`, `REB/36`, `AST/36`, `STL/36`, `BLK/36`)
+  
+  df_percentiles <- df_short %>%
+    gather(key="Stat", value = value, 2:10) %>% # gather into long form
+    group_by(Stat) %>% # Statistic
+    mutate(percentile=percent_rank(value)*100) # make new column
+  
+  player_data <- df_percentiles %>%
+    filter(Player == player)
+  
+  player_plot_title = paste0(player, " Per 36 Minutes Percentiles")
+  
+  # Plot
+  player_per_36_percentile_plot <- ggplot(player_data) +
+    #geom_col(aes(percentile, factor(Stat)), width = 0.6) +
+    geom_col(aes(x = percentile, y = factor(Stat), fill = percentile, stat = "identity")) +
+    scale_y_discrete(limits = c("FG%", "2P%", "3P%", "eFG%", "PTS/36", 
+                                "REB/36", "AST/36", "STL/36", "BLK/36")) +
+    xlim(0, 100) +
+    labs(title = player_plot_title,
+         caption = "Data from Basketball Reference | @chrisgaut9") +
+    scale_fill_gradient2(low = "blue", high = "red", mid = "gray", midpoint = 50) +
+    theme(panel.grid = element_line(color = "grey", size = 0.75, linetype = 1),
+          panel.background = element_rect(fill = "white"),
+          panel.border = element_rect(colour = "grey", fill=NA, size=1),
+          text=element_text(family="source-sans-pro"),
+          axis.title.x = element_blank(),
+          axis.title.y = element_blank())
+  
+  return(player_per_36_percentile_plot)
+}
